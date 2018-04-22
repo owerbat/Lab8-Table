@@ -146,10 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ArrayTable.cpp" />
-    <ClCompile Include="HashTable.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="TreeTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArrayTable.h" />

@@ -3,7 +3,8 @@
 #include "TreeTable.h"
 
 int main() {
-	TScanTable<int, int> *t = new TScanTable<int, int>[10];
+	TScanTable<int, int> t;
+	TSortTable<int, int> s;
 	
 	return 0;
 }

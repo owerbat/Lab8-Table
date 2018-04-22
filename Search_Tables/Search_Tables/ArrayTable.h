@@ -25,12 +25,35 @@ public:
 };
 
 template <class TKey, class TValue>
+class TSortTable;
+
+template <class TKey, class TValue>
 class TScanTable : public TArrayTable<TKey, TValue> {
+public:
+	TScanTable(int _size = 1) : TArrayTable<TKey, TValue>(_size) {}
+	TScanTable(const TSortTable<TKey, TValue> &tab);
+
+	TScanTable<TKey, TValue>& operator=(TSortTable<TKey, TValue> &tab);
+
 	bool Find(TKey fkey);
 	void Insert(TRecord<TKey, TValue> rec);
 	void Delete(TKey dkey);
 };
 
+template <class TKey, class TValue>
+class TSortTable : public TArrayTable<TKey, TValue> {
+public:
+	TSortTable(int _size = 1) : TArrayTable<TKey, TValue>(_size) {}
+	TSortTable(const TScanTable<TKey, TValue> &tab);
+
+	TSortTable<TKey, TValue>& operator=(TScanTable<TKey, TValue> &tab);
+
+	bool Find(TKey fkey);
+	void Insert(TRecord<TKey, TValue> rec);
+	void Delete(TKey dkey);
+
+	void QSort(int left, int right);
+};
 
 
 
@@ -79,6 +102,32 @@ TArrayTable<TKey, TValue>& TArrayTable<TKey, TValue>::operator=(const TArrayTabl
 
 
 template <class TKey, class TValue>
+TScanTable<TKey, TValue>::TScanTable(const TSortTable<TKey, TValue> &tab) {
+	size = tab.size;
+	dataCount = tab.dataCount;
+	currNum = tab.currNum;
+	arr = new TRecord<TKey, TValue>[size];
+	for (int i = 0; i < dataCount; i++) {
+		arr[i] = tab.arr[i];
+	}
+}
+
+template <class TKey, class TValue>
+TScanTable<TKey, TValue>& TScanTable<TKey, TValue>::operator=(TSortTable<TKey, TValue> &tab) {
+	if (size != tab.size) {
+		size = tab.size;
+		delete[] arr;
+		arr = new TRecord<TKey, TValue>[size];
+	}
+	dataCount = tab.dataCount;
+	currNum = tab.currNum;
+	arr = new TRecord<TKey, TValue>[size];
+	for (int i = 0; i < dataCount; i++) {
+		arr[i] = tab.arr[i];
+	}
+}
+
+template <class TKey, class TValue>
 bool TScanTable<TKey, TValue>::Find(TKey fkey) {
 	for (int i = 0; i < dataCount; i++) {
 		efficiency++;
@@ -103,7 +152,121 @@ void TScanTable<TKey, TValue>::Insert(TRecord<TKey, TValue> rec) {
 template <class TKey, class TValue>
 void TScanTable<TKey, TValue>::Delete(TKey dkey) {
 	if (Find(dkey)) {
-		arr[currNum] = arr[dataCount--];
+		arr[currNum] = arr[dataCount - 1];
+		dataCount--;
 		efficiency++;
+	}
+}
+
+
+
+//------------------------------------------------------------------------------------------------------------------------------
+
+
+
+template <class TKey, class TValue>
+TSortTable<TKey, TValue>::TSortTable(const TScanTable<TKey, TValue> &tab) {
+	size = tab.size;
+	dataCount = tab.dataCount;
+	currNum = tab.currNum;
+	arr = new TRecord<TKey, TValue>[size];
+	for (int i = 0; i < dataCount; i++) {
+		arr[i] = tab.arr[i];
+	}
+	QSort(0, dataCount - 1);
+}
+
+template <class TKey, class TValue>
+TSortTable<TKey, TValue>& TSortTable<TKey, TValue>::operator=(TScanTable<TKey, TValue> &tab) {
+	if (size != tab.size) {
+		size = tab.size;
+		delete[] arr;
+		arr = new TRecord<TKey, TValue>[size];
+	}
+	dataCount = tab.dataCount;
+	currNum = tab.currNum;
+	for (int i = 0; i < dataCount; i++) {
+		arr[i] = tab.arr[i];
+	}
+	QSort(0, dataCount - 1);
+}
+
+template <class TKey, class TValue>
+bool TSortTable<TKey, TValue>::Find(TKey fkey) {
+	int left = 0, right = dataCount - 1, mid;
+
+	while (left <= right) {
+		efficiency++;
+		mid = (left + right) / 2;
+		if (fkey == arr[mid].key) {
+			currNum = mid;
+			return true;
+		}
+		else if (fkey > arr[mid].key) {
+			left = mid + 1;
+		}
+		else {
+			right = mid - 1;
+		}
+	}
+
+	currNum = left;
+	return false;
+}
+
+template <class TKey, class TValue>
+void TSortTable<TKey, TValue>::Insert(TRecord<TKey, TValue> rec) {
+	if (!Find(rec.key)) {
+		for (int i = dataCount; i > currNum; i++) {
+			efficiency++;
+			arr[i] = arr[i - 1];
+		}
+		arr[currNum] = rec;
+		dataCount++;
+	}
+}
+
+template <class TKey, class TValue>
+void TSortTable<TKey, TValue>::Delete(TKey dkey) {
+	if (Find(dkey)) {
+		for (int i = currNum; i < dataCount - 1; i++) {
+			efficiency++;
+			arr[i] = arr[i + 1];
+		}
+		dataCount--;
+	}
+}
+
+template <class TKey, class TValue>
+void TSortTable<TKey, TValue>::QSort(int left, int right) {
+	int mid = (left + right) / 2;
+	TKey x = arr[mid].key;
+	TRecord<TKey, TValue> tmp;
+	int i = left, j = right;
+
+	while (i <= j) {
+		while (arr[i].key < x) {
+			i++;
+			efficiency++;
+		}
+		while (arr[j].key > x) {
+			j--;
+			efficiency++;
+		}
+
+		if (i <= j) {
+			tmp = arr[i];
+			arr[i] = arr[j];
+			arr[j] = tmp;
+			i++;
+			j--;
+		}
+
+		if (j > left) {
+			QSort(left, j);
+		}
+		if (i < right) {
+			QSort(i, right);
+		}
 	}
 }
