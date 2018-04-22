@@ -8,6 +8,12 @@ class TRecord {
 public:
 	TKey key;
 	TValue value;
+
+	TRecord() {}
+	TRecord(TKey _key, TValue _value) {
+		key = _key;
+		value = _value;
+	}
 };
 
 template <class TKey, class TValue>
@@ -34,9 +40,11 @@ public:
 
 	void Print() {
 		TRecord<TKey, TValue> tmp;
+		int i = 0;
 		for (Reset(); !IsEnd(); GoNext()) {
 			tmp = GetCurrent();
-			cout << tmp.value << endl;
+			cout << i << ") "  << tmp.key << " - " << tmp.value << endl;
+			i++;
 		}
 	}
 };

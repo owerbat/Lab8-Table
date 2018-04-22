@@ -217,7 +217,7 @@ bool TSortTable<TKey, TValue>::Find(TKey fkey) {
 template <class TKey, class TValue>
 void TSortTable<TKey, TValue>::Insert(TRecord<TKey, TValue> rec) {
 	if (!Find(rec.key)) {
-		for (int i = dataCount; i > currNum; i++) {
+		for (int i = dataCount; i > currNum; i--) {
 			efficiency++;
 			arr[i] = arr[i - 1];
 		}
