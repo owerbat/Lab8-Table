@@ -24,6 +24,8 @@ protected:
 public:
 	TTable() { dataCount = 0; efficiency = 0; }
 
+	int GetDataCount() { return dataCount; }
+
 	bool IsEmpty() { return dataCount == 0; }
 	virtual bool IsFull() = 0;
 

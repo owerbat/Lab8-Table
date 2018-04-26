@@ -17,6 +17,10 @@ public:
 	TRecord<TKey, TValue> GetCurrent() { return arr[currNum]; }
 	void SetCurrValue(TValue val) { arr[currNum].value = val; }
 
+	int GetSize() { return size; }
+	int GetCurrNum() { return currNum; }
+	TRecord<TKey, TValue> GetArrElem(int n) { return arr[n]; }
+
 	void Reset() { currNum = 0; }
 	bool IsEnd() { return currNum == dataCount; }
 	void GoNext() { currNum++; }
@@ -93,6 +97,8 @@ TArrayTable<TKey, TValue>& TArrayTable<TKey, TValue>::operator=(const TArrayTabl
 	for (int i = 0; i < size; i++) {
 		arr[i] = tab.arr[i];
 	}
+
+	return *this;
 }
 
 
@@ -114,17 +120,23 @@ TScanTable<TKey, TValue>::TScanTable(const TSortTable<TKey, TValue> &tab) {
 
 template <class TKey, class TValue>
 TScanTable<TKey, TValue>& TScanTable<TKey, TValue>::operator=(TSortTable<TKey, TValue> &tab) {
-	if (size != tab.size) {
-		size = tab.size;
+	if (size != tab.GetSize() /*tab.size*/) {
+		//size = tab.size;
+		size = tab.GetSize();
 		delete[] arr;
 		arr = new TRecord<TKey, TValue>[size];
 	}
-	dataCount = tab.dataCount;
-	currNum = tab.currNum;
+	//dataCount = tab.dataCount;
+	dataCount = tab.GetDataCount();
+	//currNum = tab.currNum;
+	currNum = tab.GetCurrNum();
 	arr = new TRecord<TKey, TValue>[size];
 	for (int i = 0; i < dataCount; i++) {
-		arr[i] = tab.arr[i];
+		//arr[i] = tab.arr[i];
+		arr[i] = tab.GetArrElem(i);
 	}
+
+	return *this;
 }
 
 template <class TKey, class TValue>
@@ -178,17 +190,23 @@ TSortTable<TKey, TValue>::TSortTable(const TScanTable<TKey, TValue> &tab) {
 
 template <class TKey, class TValue>
 TSortTable<TKey, TValue>& TSortTable<TKey, TValue>::operator=(TScanTable<TKey, TValue> &tab) {
-	if (size != tab.size) {
-		size = tab.size;
+	if (size != tab.GetSize() /*tab.size*/) {
+		//size = tab.size;
+		size = tab.GetSize();
 		delete[] arr;
 		arr = new TRecord<TKey, TValue>[size];
 	}
-	dataCount = tab.dataCount;
-	currNum = tab.currNum;
+	//dataCount = tab.dataCount;
+	//currNum = tab.currNum;
+	dataCount = tab.GetDataCount();
+	currNum = tab.GetCurrNum();
 	for (int i = 0; i < dataCount; i++) {
-		arr[i] = tab.arr[i];
+		//arr[i] = tab.arr[i];
+		arr[i] = tab.GetArrElem(i);
 	}
 	QSort(0, dataCount - 1);
+
+	return *this;
 }
 
 template <class TKey, class TValue>
