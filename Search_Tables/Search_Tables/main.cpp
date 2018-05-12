@@ -1,8 +1,10 @@
 #include "ArrayTable.h"
 #include "HashTable.h"
 #include "TreeTable.h"
+#include <time.h>
 
 int main() {
+	//srand(time(NULL));
 	int m = 10, n = m + 10;
 	TScanTable<int, int> t(n);
 	TSortTable<int, int> s(n);
@@ -15,7 +17,7 @@ int main() {
 			s.Insert(tmp2);
 	}
 
-	s = t; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	s = t;
 
 	cout << "t:\n";
 	t.Print();
