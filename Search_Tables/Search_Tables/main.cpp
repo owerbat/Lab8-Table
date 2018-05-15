@@ -38,7 +38,7 @@ int main() {
 	s.Print();*/
 	
 
-	int n = 20;
+	/*int n = 20;
 	TArrayHash<string, int> tab(n);
 	string *keys = new string[n];
 
@@ -60,7 +60,11 @@ int main() {
 	cout << "tab:\n";
 	tab.Print();
 	cout << "\nall tab:\n";
-	tab.PrintAll();
+	tab.PrintAll();*/
+
+
+
+	TTreeTable<int, int> tt;
 	
 	return 0;
 }

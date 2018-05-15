@@ -9,11 +9,11 @@ public:
 	TKey key;
 	TValue value;
 
-	TRecord() {}
-	TRecord(TKey _key, TValue _value) {
-		key = _key;
-		value = _value;
-	}
+	TRecord();
+	TRecord(TKey _key, TValue _value);
+	TRecord(const TRecord<TKey, TValue> &rec);
+
+	TRecord &operator=(const TRecord<TKey, TValue> &rec);
 };
 
 template <class TKey, class TValue>
@@ -50,3 +50,36 @@ public:
 		}
 	}
 };
+
+
+
+//------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------
+
+
+
+template <class TKey, class TValue>
+TRecord<TKey, TValue>::TRecord() {
+	key = TKey();
+	value = TValue();
+}
+
+template <class TKey, class TValue>
+TRecord<TKey, TValue>::TRecord(TKey _key, TValue _value) {
+	key = _key;
+	value = _value;
+}
+
+template <class TKey, class TValue>
+TRecord<TKey, TValue>::TRecord(const TRecord<TKey, TValue> &rec) {
+	key = rec.key;
+	value = rec.value;
+}
+
+template <class TKey, class TValue>
+TRecord<TKey, TValue> &TRecord<TKey, TValue>::operator=(const TRecord<TKey, TValue> &rec) {
+	key = rec.key;
+	value = rec.value;
+	return *this;
+}
