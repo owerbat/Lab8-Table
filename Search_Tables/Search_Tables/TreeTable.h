@@ -28,6 +28,7 @@ protected:
 	TNode<TKey, TValue> *pRoot, *pCurr;
 	TNode<TKey, TValue> **pRes;
 	stack<TNode<TKey, TValue> *> st;
+	int nodeCount;
 public:
 	TTreeTable();
 
@@ -85,6 +86,7 @@ template <class TKey, class TValue>
 void TTreeTable<TKey, TValue>::Insert(TRecord<TKey, TValue> rec) {
 	if (!Find(rec.key)) {
 		*pRes = new TNode<TKey, TValue>(rec); // DANGER
+		dataCount++;
 	}
 }
 
@@ -113,21 +115,47 @@ void TTreeTable<TKey, TValue>::Delete(TKey dkey) {
 			*prev = curr->pLeft;
 		}
 
+		dataCount--;
 		delete dnode;
 	}
 }
 
 template <class TKey, class TValue>
 void TTreeTable<TKey, TValue>::Reset() {
-
+	while (!st.empty()) {
+		st.pop();
+	}
+	nodeCount = 0;
+	pCurr = pRoot;
+	while (pCurr->pLeft) {
+		st.push(pCurr);
+		pCurr = pCurr->pLeft;
+	}
+	st.push(pCurr);
 }
 
 template <class TKey, class TValue>
 bool TTreeTable<TKey, TValue>::IsEnd() {
-	return (bool)(rand() % 2);
+	return (nodeCount == dataCount);
 }
 
 template <class TKey, class TValue>
 void TTreeTable<TKey, TValue>::GoNext() {
-
+	if (!st.empty()) {
+		st.pop();
+	}
+	if (pCurr->pRight) {
+		pCurr = pCurr->pRight;
+		while (pCurr->pLeft) {
+			st.push(pCurr);
+			pCurr = pCurr->pLeft;
+		}
+		st.push(pCurr);
+	}
+	else {
+		if (!st.empty()) {
+			pCurr = st.top();
+		}
+	}
+	nodeCount++;
 }

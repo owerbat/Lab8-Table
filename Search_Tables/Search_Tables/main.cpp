@@ -65,6 +65,23 @@ int main() {
 
 
 	TTreeTable<int, int> tt;
+	int n = 20;
+	int *keys1 = new int[n];
+
+	for (int i = 0; i < n / 2; i++) {
+		TRecord<int, int> tmp1(rand() % 1000, rand() % 1000);
+		keys1[i] = tmp1.key;
+
+		tt.Insert(tmp1);
+	}
+
+	cout << "tt1:\n";
+	tt.Print();
+
+	tt.Delete(keys1[3]);
+
+	cout << "tt1:\n";
+	tt.Print();
 	
 	return 0;
 }
