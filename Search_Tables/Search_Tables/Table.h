@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -14,6 +15,8 @@ public:
 	TRecord(const TRecord<TKey, TValue> &rec);
 
 	TRecord &operator=(const TRecord<TKey, TValue> &rec);
+
+	void Print() { cout << key << " - " << value; }
 };
 
 template <class TKey, class TValue>

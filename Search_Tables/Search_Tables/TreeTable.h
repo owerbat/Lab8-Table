@@ -44,6 +44,9 @@ public:
 
 	TRecord<TKey, TValue> GetCurrent() { return pCurr->record; }
 	void SetCurrValue(TValue val) { pCurr->record.value = val; }
+
+	TRecord<TKey, TValue> GetResRecord() { return (*pRes)->record; }
+	void SetResValue(TValue val) { (*pRes)->record.value = val; }
 };
 
 

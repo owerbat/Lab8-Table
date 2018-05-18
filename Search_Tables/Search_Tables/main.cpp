@@ -1,87 +1,112 @@
 #include "ArrayTable.h"
 #include "HashTable.h"
 #include "TreeTable.h"
-#include <time.h>
+#include <fstream>
 
 string RandomSrting(int size);
 
 int main() {
-	//srand(time(NULL));
-	/*int m = 10, n = m + 10;
-	TScanTable<int, int> t(n);
-	TSortTable<int, int> s(n);
-	int *keys1 = new int[n], *keys2 = new int[n];
-
-	for (int i = 0; i < m; i++) {
-		TRecord<int, int> tmp1(rand() % 1000, rand() % 1000), tmp2(rand() % 1000, rand() % 1000);
-		keys1[i] = tmp1.key;
-		keys2[i] = tmp2.key;
-		if(!t.IsFull())
-			t.Insert(tmp1);
-		if(!s.IsFull())
-			s.Insert(tmp2);
+	ifstream ifs("Machine_learning.txt");
+	if (!ifs.is_open()) {
+		cout << "Reading file error\n";
+		return 1;
 	}
 
-	//s = t;
+	int count = 1000;
+	char buffer[50];
+	TScanTable<string, int> scantab(count);
+	TSortTable<string, int> sorttab(count);
+	TArrayHash<string, int> hashtab(count);
+	TTreeTable<string, int> treetab;
 
-	cout << "t:\n";
-	t.Print();
-	cout << "\ns:\n";
-	s.Print();
+	while (!ifs.eof()) {
+		ifs >> buffer;
+		string str(buffer);
+		TRecord<string, int> tmp(str, 1);
 
-	t.Delete(keys1[9]);
-	s.Delete(keys2[4]);
+		if (scantab.Find(tmp.key)) {
+			scantab.SetCurrValue(scantab.GetCurrent().value + 1);
+		}
+		else {
+			if (!scantab.IsFull()) {
+				scantab.Insert(tmp);
+			}
+			else {
+				cout << "Table size is too small!\n";
+				return 1;
+			}
+		}
 
-	cout << "t:\n";
-	t.Print();
-	cout << "\ns:\n";
-	s.Print();*/
-	
+		if (sorttab.Find(tmp.key)) {
+			sorttab.SetCurrValue(sorttab.GetCurrent().value + 1);
+		}
+		else {
+			if (!sorttab.IsFull()) {
+				sorttab.Insert(tmp);
+			}
+			else {
+				cout << "Table size is too small!\n";
+				return 1;
+			}
+		}
 
-	/*int n = 20;
-	TArrayHash<string, int> tab(n);
-	string *keys = new string[n];
+		if (hashtab.Find(tmp.key)) {
+			hashtab.SetCurrValue(hashtab.GetCurrent().value + 1);
+		}
+		else {
+			if (!hashtab.IsFull()) {
+				hashtab.Insert(tmp);
+			}
+			else {
+				cout << "Table size is too small!\n";
+				return 1;
+			}
+		}
 
-	for (int i = 0; i < n/2; i++) {
-		TRecord<string, int> tmp(RandomSrting(5), rand() % 1000);
-		keys[i] = tmp.key;
-		if (!tab.IsFull()) {
-			tab.Insert(tmp);
+		if (treetab.Find(tmp.key)) {
+			//treetab.SetCurrValue(treetab.GetCurrent().value + 1);
+			treetab.SetResValue(treetab.GetResRecord().value + 1);
+		}
+		else {
+			if (!treetab.IsFull()) {
+				treetab.Insert(tmp);
+			}
+			else {
+				cout << "Table size is too small!\n";
+				return 1;
+			}
 		}
 	}
 
-	cout << "tab:\n";
-	tab.Print();
-	cout << "\nall tab:\n";
-	tab.PrintAll();
+	//scantab.Print();
+	sorttab.Print();
+	//hashtab.PrintAll();
+	//treetab.Print();
+	cout << endl;
 
-	tab.Delete(keys[0]);
+	TRecord<string, int> maximum[10];
+	TSortTable<int, string> top(count);
 
-	cout << "tab:\n";
-	tab.Print();
-	cout << "\nall tab:\n";
-	tab.PrintAll();*/
-
-
-
-	TTreeTable<int, int> tt;
-	int n = 20;
-	int *keys1 = new int[n];
-
-	for (int i = 0; i < n / 2; i++) {
-		TRecord<int, int> tmp1(rand() % 1000, rand() % 1000);
-		keys1[i] = tmp1.key;
-
-		tt.Insert(tmp1);
+	for (sorttab.Reset(); !sorttab.IsEnd(); sorttab.GoNext()) {
+		top.Insert(TRecord<int, string>(sorttab.GetCurrent().value, sorttab.GetCurrent().key));
 	}
 
-	cout << "tt1:\n";
-	tt.Print();
+	for (top.Reset(); !top.TenRecordsLeft(); top.GoNext());
 
-	tt.Delete(keys1[3]);
+	int i = 0;
+	while (!top.IsEnd()) {
+		maximum[i] = TRecord<string, int>(top.GetCurrent().value, top.GetCurrent().key);
+		i++;
+		top.GoNext();
+	}
 
-	cout << "tt1:\n";
-	tt.Print();
+	cout << "maximum:\n";
+	for (i = 0; i < 10; i++) {
+		maximum[i].Print();
+		cout << endl;
+	}
+
+	ifs.close();
 	
 	return 0;
 }

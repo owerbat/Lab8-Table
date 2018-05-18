@@ -26,6 +26,8 @@ public:
 	void GoNext() { currNum++; }
 
 	bool IsFull() { return size == dataCount; }
+
+	bool TenRecordsLeft() { return currNum == (dataCount - 10); }
 };
 
 template <class TKey, class TValue>
