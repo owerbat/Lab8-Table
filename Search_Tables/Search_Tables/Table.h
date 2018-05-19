@@ -43,6 +43,8 @@ public:
 	virtual TRecord<TKey, TValue> GetCurrent() = 0;
 	virtual void SetCurrValue(TValue val) = 0;
 
+	int GetEfficiency() { return efficiency; }
+
 	void Print() {
 		TRecord<TKey, TValue> tmp;
 		int i = 0;
