@@ -20,7 +20,7 @@ namespace Graphic_tables {
 	public ref class MyForm : public System::Windows::Forms::Form
 	{
 	public:
-		int count;
+		int count = 1000;
 		char *buffer;
 		TScanTable<string, int> *scantab;
 		TSortTable<string, int> *sorttab;
@@ -29,12 +29,17 @@ namespace Graphic_tables {
 		TRecord<string, int> *maximum;
 		TSortTable<int, string> *top;
 		int *eff;
+		int flag = 0;
 
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Number;
 	public:
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Key;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Value;
 	private: System::Windows::Forms::TextBox^  textBox1;
+	private: System::Windows::Forms::Label^  label2;
+	private: System::Windows::Forms::TextBox^  textBox2;
+	private: System::Windows::Forms::Button^  button5;
+	private: System::Windows::Forms::Button^  button6;
 	private: System::Windows::Forms::Label^  label1;
 			 
 
@@ -46,7 +51,6 @@ namespace Graphic_tables {
 			//
 			//TODO: Add the constructor code here
 			//
-			count = 1000;
 			buffer = new char[50];
 			scantab = new TScanTable<string, int>(count);
 			sorttab = new TSortTable<string, int>(count);
@@ -109,6 +113,10 @@ namespace Graphic_tables {
 			this->button4 = (gcnew System::Windows::Forms::Button());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->label2 = (gcnew System::Windows::Forms::Label());
+			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
+			this->button5 = (gcnew System::Windows::Forms::Button());
+			this->button6 = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -154,7 +162,7 @@ namespace Graphic_tables {
 			// 
 			// button2
 			// 
-			this->button2->Location = System::Drawing::Point(185, 33);
+			this->button2->Location = System::Drawing::Point(147, 33);
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(77, 32);
 			this->button2->TabIndex = 2;
@@ -164,7 +172,7 @@ namespace Graphic_tables {
 			// 
 			// button3
 			// 
-			this->button3->Location = System::Drawing::Point(344, 33);
+			this->button3->Location = System::Drawing::Point(267, 33);
 			this->button3->Name = L"button3";
 			this->button3->Size = System::Drawing::Size(77, 32);
 			this->button3->TabIndex = 3;
@@ -174,7 +182,7 @@ namespace Graphic_tables {
 			// 
 			// button4
 			// 
-			this->button4->Location = System::Drawing::Point(497, 33);
+			this->button4->Location = System::Drawing::Point(388, 33);
 			this->button4->Name = L"button4";
 			this->button4->Size = System::Drawing::Size(77, 32);
 			this->button4->TabIndex = 4;
@@ -198,11 +206,51 @@ namespace Graphic_tables {
 			this->label1->TabIndex = 6;
 			this->label1->Text = L"Efficiency";
 			// 
+			// label2
+			// 
+			this->label2->AutoSize = true;
+			this->label2->Location = System::Drawing::Point(611, 138);
+			this->label2->Name = L"label2";
+			this->label2->Size = System::Drawing::Size(32, 17);
+			this->label2->TabIndex = 8;
+			this->label2->Text = L"Key";
+			// 
+			// textBox2
+			// 
+			this->textBox2->Location = System::Drawing::Point(675, 135);
+			this->textBox2->Name = L"textBox2";
+			this->textBox2->Size = System::Drawing::Size(100, 22);
+			this->textBox2->TabIndex = 7;
+			// 
+			// button5
+			// 
+			this->button5->Location = System::Drawing::Point(812, 130);
+			this->button5->Name = L"button5";
+			this->button5->Size = System::Drawing::Size(77, 32);
+			this->button5->TabIndex = 9;
+			this->button5->Text = L"Find";
+			this->button5->UseVisualStyleBackColor = true;
+			this->button5->Click += gcnew System::EventHandler(this, &MyForm::button5_Click);
+			// 
+			// button6
+			// 
+			this->button6->Location = System::Drawing::Point(497, 33);
+			this->button6->Name = L"button6";
+			this->button6->Size = System::Drawing::Size(77, 32);
+			this->button6->TabIndex = 10;
+			this->button6->Text = L"Top 10";
+			this->button6->UseVisualStyleBackColor = true;
+			this->button6->Click += gcnew System::EventHandler(this, &MyForm::button6_Click);
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(939, 555);
+			this->Controls->Add(this->button6);
+			this->Controls->Add(this->button5);
+			this->Controls->Add(this->label2);
+			this->Controls->Add(this->textBox2);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->textBox1);
 			this->Controls->Add(this->button4);
@@ -318,14 +366,21 @@ namespace Graphic_tables {
 		}
 	}
 
+	private: void ClearAllScreen() {
+		for (int i = 0; i < count; i++) {
+			dataGridView1->Rows[i]->Cells[0]->Value = "";
+			dataGridView1->Rows[i]->Cells[1]->Value = "";
+			dataGridView1->Rows[i]->Cells[2]->Value = "";
+		}
+	}
+
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 		TRecord<string, int> tmp;
 		int i = 0;
-		//dataGridView1->RowCount = count;
+		flag = 0;
 		ClearScreen();
 		for (scantab->Reset(); !scantab->IsEnd(); scantab->GoNext()) {
 			tmp = scantab->GetCurrent();
-			//dataGridView1->Rows[i]->Cells[0]->Value = i;
 			dataGridView1->Rows[i]->Cells[1]->Value = Convert::ToString(StrToStr(tmp.key));
 			dataGridView1->Rows[i]->Cells[2]->Value = tmp.value;
 			i++;
@@ -335,6 +390,7 @@ namespace Graphic_tables {
 	private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e) {
 		TRecord<string, int> tmp;
 		int i = 0;
+		flag = 1;
 		ClearScreen();
 		for (sorttab->Reset(); !sorttab->IsEnd(); sorttab->GoNext()) {
 			tmp = sorttab->GetCurrent();
@@ -347,6 +403,7 @@ namespace Graphic_tables {
 	private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) {
 		TRecord<string, int> tmp;
 		int i = 0;
+		flag = 2;
 		ClearScreen();
 		for (hashtab->Reset(); !hashtab->IsEnd(); hashtab->GoNext()) {
 			tmp = hashtab->GetCurrent();
@@ -359,6 +416,7 @@ namespace Graphic_tables {
 	private: System::Void button4_Click(System::Object^  sender, System::EventArgs^  e) {
 		TRecord<string, int> tmp;
 		int i = 0;
+		flag = 3;
 		ClearScreen();
 		for (treetab->Reset(); !treetab->IsEnd(); treetab->GoNext()) {
 			tmp = treetab->GetCurrent();
@@ -367,6 +425,111 @@ namespace Graphic_tables {
 			i++;
 		}
 		textBox1->Text = Convert::ToString(eff[3]);
+	}
+
+	private: System::Void button5_Click(System::Object^  sender, System::EventArgs^  e) {
+		string key = "";
+		String^ str = textBox2->Text;
+		for (int i = 0; i < str->Length; i++) {
+			key += str[i];
+		}
+
+		bool tmp;
+		int i = 0, effCounter;
+		if (key != "") {
+			switch (flag) {
+			case 0:
+				effCounter = scantab->GetEfficiency();
+				tmp = scantab->Find(key);
+				if (tmp) {
+					while (i < count) {
+						if (Convert::ToString(dataGridView1->Rows[i]->Cells[1]->Value) == str) break;
+						i++;
+					}
+					ClearAllScreen();
+					dataGridView1->Rows[0]->Cells[0]->Value = i;
+					dataGridView1->Rows[0]->Cells[1]->Value = str;
+					dataGridView1->Rows[0]->Cells[2]->Value = scantab->GetCurrent().value;
+					effCounter -= scantab->GetEfficiency();
+					textBox1->Text = Convert::ToString((-1) * effCounter);
+				}
+				else {
+					textBox2->Text = "-1";
+				}
+				break;
+
+			case 1:
+				effCounter = sorttab->GetEfficiency();
+				tmp = sorttab->Find(key);
+				if (tmp) {
+					while (i < count) {
+						if (Convert::ToString(dataGridView1->Rows[i]->Cells[1]->Value) == str) break;
+						i++;
+					}
+					ClearAllScreen();
+					dataGridView1->Rows[0]->Cells[0]->Value = i;
+					dataGridView1->Rows[0]->Cells[1]->Value = str;
+					dataGridView1->Rows[0]->Cells[2]->Value = sorttab->GetCurrent().value;
+					effCounter -= sorttab->GetEfficiency();
+					textBox1->Text = Convert::ToString((-1) * effCounter);
+				}
+				else {
+					textBox2->Text = "-1";
+				}
+				break;
+
+			case 2:
+				effCounter = hashtab->GetEfficiency();
+				tmp = hashtab->Find(key);
+				if (tmp) {
+					while (i < count) {
+						if (Convert::ToString(dataGridView1->Rows[i]->Cells[1]->Value) == str) break;
+						i++;
+					}
+					ClearAllScreen();
+					dataGridView1->Rows[0]->Cells[0]->Value = i;
+					dataGridView1->Rows[0]->Cells[1]->Value = str;
+					dataGridView1->Rows[0]->Cells[2]->Value = hashtab->GetCurrent().value;
+					effCounter -= hashtab->GetEfficiency();
+					textBox1->Text = Convert::ToString((-1) * effCounter);
+				}
+				else {
+					textBox2->Text = "-1";
+				}
+				break;
+
+			case 3:
+				effCounter = treetab->GetEfficiency();
+				tmp = treetab->Find(key);
+				if (tmp) {
+					while (i < count) {
+						if (Convert::ToString(dataGridView1->Rows[i]->Cells[1]->Value) == str) break;
+						i++;
+					}
+					ClearAllScreen();
+					dataGridView1->Rows[0]->Cells[0]->Value = i;
+					dataGridView1->Rows[0]->Cells[1]->Value = str;
+					dataGridView1->Rows[0]->Cells[2]->Value = treetab->GetCurrent().value;
+					effCounter -= treetab->GetEfficiency();
+					textBox1->Text = Convert::ToString((-1) * effCounter);
+				}
+				else {
+					textBox2->Text = "-1";
+				}
+				break;
+			}
+		}
+		else {
+			textBox2->Text = "Error";
+		}
+	}
+	private: System::Void button6_Click(System::Object^  sender, System::EventArgs^  e) {
+		ClearAllScreen();
+		for (int i = 0; i < 10; i++) {
+			dataGridView1->Rows[i]->Cells[0]->Value = i + 1;
+			dataGridView1->Rows[i]->Cells[1]->Value = Convert::ToString(StrToStr(maximum[9 - i].key));
+			dataGridView1->Rows[i]->Cells[2]->Value = maximum[9 - i].value;
+		}
 	}
 };
 }
