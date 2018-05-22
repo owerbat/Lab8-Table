@@ -40,6 +40,8 @@ namespace Graphic_tables {
 	private: System::Windows::Forms::TextBox^  textBox2;
 	private: System::Windows::Forms::Button^  button5;
 	private: System::Windows::Forms::Button^  button6;
+	private: System::Windows::Forms::Button^  button7;
+	private: System::Windows::Forms::Button^  button8;
 	private: System::Windows::Forms::Label^  label1;
 			 
 
@@ -117,6 +119,8 @@ namespace Graphic_tables {
 			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
 			this->button5 = (gcnew System::Windows::Forms::Button());
 			this->button6 = (gcnew System::Windows::Forms::Button());
+			this->button7 = (gcnew System::Windows::Forms::Button());
+			this->button8 = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -219,12 +223,12 @@ namespace Graphic_tables {
 			// 
 			this->textBox2->Location = System::Drawing::Point(675, 135);
 			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(100, 22);
+			this->textBox2->Size = System::Drawing::Size(227, 22);
 			this->textBox2->TabIndex = 7;
 			// 
 			// button5
 			// 
-			this->button5->Location = System::Drawing::Point(812, 130);
+			this->button5->Location = System::Drawing::Point(614, 212);
 			this->button5->Name = L"button5";
 			this->button5->Size = System::Drawing::Size(77, 32);
 			this->button5->TabIndex = 9;
@@ -242,11 +246,33 @@ namespace Graphic_tables {
 			this->button6->UseVisualStyleBackColor = true;
 			this->button6->Click += gcnew System::EventHandler(this, &MyForm::button6_Click);
 			// 
+			// button7
+			// 
+			this->button7->Location = System::Drawing::Point(727, 212);
+			this->button7->Name = L"button7";
+			this->button7->Size = System::Drawing::Size(77, 32);
+			this->button7->TabIndex = 11;
+			this->button7->Text = L"Insert";
+			this->button7->UseVisualStyleBackColor = true;
+			this->button7->Click += gcnew System::EventHandler(this, &MyForm::button7_Click);
+			// 
+			// button8
+			// 
+			this->button8->Location = System::Drawing::Point(837, 212);
+			this->button8->Name = L"button8";
+			this->button8->Size = System::Drawing::Size(77, 32);
+			this->button8->TabIndex = 12;
+			this->button8->Text = L"Delete";
+			this->button8->UseVisualStyleBackColor = true;
+			this->button8->Click += gcnew System::EventHandler(this, &MyForm::button8_Click);
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(939, 555);
+			this->Controls->Add(this->button8);
+			this->Controls->Add(this->button7);
 			this->Controls->Add(this->button6);
 			this->Controls->Add(this->button5);
 			this->Controls->Add(this->label2);
@@ -454,7 +480,7 @@ namespace Graphic_tables {
 					textBox1->Text = Convert::ToString((-1) * effCounter);
 				}
 				else {
-					textBox2->Text = "-1";
+					textBox2->Text = "The key is not founded";
 				}
 				break;
 
@@ -474,7 +500,7 @@ namespace Graphic_tables {
 					textBox1->Text = Convert::ToString((-1) * effCounter);
 				}
 				else {
-					textBox2->Text = "-1";
+					textBox2->Text = "The key is not founded";
 				}
 				break;
 
@@ -494,7 +520,7 @@ namespace Graphic_tables {
 					textBox1->Text = Convert::ToString((-1) * effCounter);
 				}
 				else {
-					textBox2->Text = "-1";
+					textBox2->Text = "The key is not founded";
 				}
 				break;
 
@@ -514,9 +540,10 @@ namespace Graphic_tables {
 					textBox1->Text = Convert::ToString((-1) * effCounter);
 				}
 				else {
-					textBox2->Text = "-1";
+					textBox2->Text = "The key is not founded";
 				}
 				break;
+			default: textBox2->Text = "Table is not selected";
 			}
 		}
 		else {
@@ -529,6 +556,131 @@ namespace Graphic_tables {
 			dataGridView1->Rows[i]->Cells[0]->Value = i + 1;
 			dataGridView1->Rows[i]->Cells[1]->Value = Convert::ToString(StrToStr(maximum[9 - i].key));
 			dataGridView1->Rows[i]->Cells[2]->Value = maximum[9 - i].value;
+		}
+	}
+
+	private: System::Void button7_Click(System::Object^  sender, System::EventArgs^  e) {
+		string key = "";
+		String^ str = textBox2->Text;
+		for (int i = 0; i < str->Length; i++) {
+			key += str[i];
+		}
+
+		int i = 0, effCounter;
+		if (key != "") {
+			switch (flag) {
+			case 0:
+				if (!scantab->IsFull()) {
+					effCounter = scantab->GetEfficiency();
+					scantab->Insert(TRecord<string, int>(key, 0));
+					effCounter -= scantab->GetEfficiency();
+					textBox1->Text = Convert::ToString((-1) * effCounter);
+					button1_Click(sender, e);
+				}
+				else {
+					textBox2->Text = "The table is full";
+				}
+				break;
+			case 1:
+				if (!sorttab->IsFull()) {
+					effCounter = sorttab->GetEfficiency();
+					sorttab->Insert(TRecord<string, int>(key, 0));
+					effCounter -= sorttab->GetEfficiency();
+					textBox1->Text = Convert::ToString((-1) * effCounter);
+					button2_Click(sender, e);
+				}
+				else {
+					textBox2->Text = "The table is full";
+				}
+				break;
+			case 2:
+				if (!hashtab->IsFull()) {
+					effCounter = hashtab->GetEfficiency();
+					hashtab->Insert(TRecord<string, int>(key, 0));
+					effCounter -= hashtab->GetEfficiency();
+					textBox1->Text = Convert::ToString((-1) * effCounter);
+					button3_Click(sender, e);
+				}
+				else {
+					textBox2->Text = "The table is full";
+				}
+				break;
+			case 3:
+				if (!treetab->IsFull()) {
+					effCounter = treetab->GetEfficiency();
+					treetab->Insert(TRecord<string, int>(key, 0));
+					effCounter -= treetab->GetEfficiency();
+					textBox1->Text = Convert::ToString((-1) * effCounter);
+					button4_Click(sender, e);
+				}
+				else {
+					textBox2->Text = "The table is full";
+				}
+				break;
+			default: textBox2->Text = "Table is not selected";
+			}
+		}
+	}
+	private: System::Void button8_Click(System::Object^  sender, System::EventArgs^  e) {
+		string key = "";
+		String^ str = textBox2->Text;
+		for (int i = 0; i < str->Length; i++) {
+			key += str[i];
+		}
+
+		int i = 0, effCounter;
+		if (key != "") {
+			switch (flag) {
+			case 0:
+				if (!scantab->IsEmpty()) {
+					effCounter = scantab->GetEfficiency();
+					scantab->Delete(key);
+					effCounter -= scantab->GetEfficiency();
+					textBox1->Text = Convert::ToString((-1) * effCounter);
+					button1_Click(sender, e);
+				}
+				else {
+					textBox2->Text = "The table is empty";
+				}
+				break;
+			case 1:
+				if (!sorttab->IsEmpty()) {
+					effCounter = sorttab->GetEfficiency();
+					sorttab->Delete(key);
+					effCounter -= sorttab->GetEfficiency();
+					textBox1->Text = Convert::ToString((-1) * effCounter);
+					button2_Click(sender, e);
+				}
+				else {
+					textBox2->Text = "The table is empty";
+				}
+				break;
+			case 2:
+				if (!hashtab->IsEmpty()) {
+					effCounter = hashtab->GetEfficiency();
+					hashtab->Delete(key);
+					effCounter -= hashtab->GetEfficiency();
+					textBox1->Text = Convert::ToString((-1) * effCounter);
+					button3_Click(sender, e);
+				}
+				else {
+					textBox2->Text = "The table is empty";
+				}
+				break;
+			case 3:
+				if (!treetab->IsEmpty()) {
+					effCounter = treetab->GetEfficiency();
+					treetab->Delete(key);
+					effCounter -= treetab->GetEfficiency();
+					textBox1->Text = Convert::ToString((-1) * effCounter);
+					button4_Click(sender, e);
+				}
+				else {
+					textBox2->Text = "The table is empty";
+				}
+				break;
+			default: textBox2->Text = "Table is not selected";
+			}
 		}
 	}
 };
