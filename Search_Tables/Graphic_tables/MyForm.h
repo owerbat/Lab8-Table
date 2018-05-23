@@ -574,8 +574,8 @@ namespace Graphic_tables {
 					effCounter = scantab->GetEfficiency();
 					scantab->Insert(TRecord<string, int>(key, 0));
 					effCounter -= scantab->GetEfficiency();
-					textBox1->Text = Convert::ToString((-1) * effCounter);
 					button1_Click(sender, e);
+					textBox1->Text = Convert::ToString((-1) * effCounter);
 				}
 				else {
 					textBox2->Text = "The table is full";
@@ -586,8 +586,8 @@ namespace Graphic_tables {
 					effCounter = sorttab->GetEfficiency();
 					sorttab->Insert(TRecord<string, int>(key, 0));
 					effCounter -= sorttab->GetEfficiency();
-					textBox1->Text = Convert::ToString((-1) * effCounter);
 					button2_Click(sender, e);
+					textBox1->Text = Convert::ToString((-1) * effCounter);
 				}
 				else {
 					textBox2->Text = "The table is full";
@@ -598,8 +598,8 @@ namespace Graphic_tables {
 					effCounter = hashtab->GetEfficiency();
 					hashtab->Insert(TRecord<string, int>(key, 0));
 					effCounter -= hashtab->GetEfficiency();
-					textBox1->Text = Convert::ToString((-1) * effCounter);
 					button3_Click(sender, e);
+					textBox1->Text = Convert::ToString((-1) * effCounter);
 				}
 				else {
 					textBox2->Text = "The table is full";
@@ -610,8 +610,8 @@ namespace Graphic_tables {
 					effCounter = treetab->GetEfficiency();
 					treetab->Insert(TRecord<string, int>(key, 0));
 					effCounter -= treetab->GetEfficiency();
-					textBox1->Text = Convert::ToString((-1) * effCounter);
 					button4_Click(sender, e);
+					textBox1->Text = Convert::ToString((-1) * effCounter);
 				}
 				else {
 					textBox2->Text = "The table is full";
@@ -636,8 +636,9 @@ namespace Graphic_tables {
 					effCounter = scantab->GetEfficiency();
 					scantab->Delete(key);
 					effCounter -= scantab->GetEfficiency();
-					textBox1->Text = Convert::ToString((-1) * effCounter);
 					button1_Click(sender, e);
+					textBox1->Text = Convert::ToString((-1) * effCounter);
+					//button1_Click(sender, e);
 				}
 				else {
 					textBox2->Text = "The table is empty";
@@ -648,8 +649,8 @@ namespace Graphic_tables {
 					effCounter = sorttab->GetEfficiency();
 					sorttab->Delete(key);
 					effCounter -= sorttab->GetEfficiency();
-					textBox1->Text = Convert::ToString((-1) * effCounter);
 					button2_Click(sender, e);
+					textBox1->Text = Convert::ToString((-1) * effCounter);
 				}
 				else {
 					textBox2->Text = "The table is empty";
@@ -660,8 +661,8 @@ namespace Graphic_tables {
 					effCounter = hashtab->GetEfficiency();
 					hashtab->Delete(key);
 					effCounter -= hashtab->GetEfficiency();
-					textBox1->Text = Convert::ToString((-1) * effCounter);
 					button3_Click(sender, e);
+					textBox1->Text = Convert::ToString((-1) * effCounter);
 				}
 				else {
 					textBox2->Text = "The table is empty";
@@ -672,8 +673,8 @@ namespace Graphic_tables {
 					effCounter = treetab->GetEfficiency();
 					treetab->Delete(key);
 					effCounter -= treetab->GetEfficiency();
-					textBox1->Text = Convert::ToString((-1) * effCounter);
 					button4_Click(sender, e);
+					textBox1->Text = Convert::ToString((-1) * effCounter);
 				}
 				else {
 					textBox2->Text = "The table is empty";
